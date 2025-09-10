@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5cb942738a9b6604cb5234be4d3898e7, type: 3}
+  m_Name: TankEnemy
+  m_EditorClassIdentifier: 
+  enemyName: Tank
+  sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  tint: {r: 0, g: 0.2917719, b: 1, a: 1}
+  prefab: {fileID: 3796460613111880166, guid: 476f5f6f85612d148a8b782cd4942dbd, type: 3}
+  maxHealth: 200
+  moveSpeed: 0.75
+  damage: 5
+  rewardGold: 5
