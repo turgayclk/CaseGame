@@ -93,6 +93,14 @@ public class EnemyController : MonoBehaviour, IDamageable
     private void OnReachEnd()
     {
         Debug.Log($"{type.enemyName} reached the end!");
+
+        // Player'a hasar ver
+        var player = Object.FindFirstObjectByType<PlayerHealth>();
+        if (player != null)
+        {
+            player.GetComponent<Health>().TakeDamage(type.damage);
+        }
+
         Destroy(gameObject);
     }
 

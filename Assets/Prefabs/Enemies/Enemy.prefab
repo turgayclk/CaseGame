@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 3748751430715898624}
   - component: {fileID: 3691259800798236903}
   m_Layer: 3
-  m_Name: NormalEnemy
+  m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -245,7 +245,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: dff9cfe37c3b8c4419a50f70da07c965, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

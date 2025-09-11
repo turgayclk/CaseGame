@@ -7,7 +7,7 @@ public class Health : MonoBehaviour, IDamageable
     public float maxHealth = 10f;
     public float currentHealth { get; private set; }
 
-    public event Action OnDeath;
+    public static event Action OnDeath;
 
     [Header("I-Frames (optional)")]
     public float iFrameDuration = 0f;
@@ -31,7 +31,13 @@ public class Health : MonoBehaviour, IDamageable
     public void TakeDamage(float amount)
     {
         if (iFrameTimer > 0f) return; // invulnerable
+
         currentHealth -= amount;
+
+        currentHealth = Mathf.Max(currentHealth, 0f); // Saðlýk 0'ýn altýna düþmesin
+
+        Debug.Log($"{gameObject.name} took {amount} damage. HP: {currentHealth}");
+
         // (isteðe baðlý) visual flash:
         if (sr != null) StartCoroutine(Flash());
 
@@ -61,7 +67,6 @@ public class Health : MonoBehaviour, IDamageable
     private void Die()
     {
         OnDeath?.Invoke();
-        // default destroy - harici sistem override edebilir
-        Destroy(gameObject);
+        
     }
 }
