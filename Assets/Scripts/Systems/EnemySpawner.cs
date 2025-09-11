@@ -65,15 +65,15 @@ public class EnemySpawner : MonoBehaviour
         // Wave baþlama yazýsý
         ShowWaveStartText($"{wave.waveName}");
 
+        // Wave tamamlandý
+        currentWaveIndex++;
+
         // Sonraki wave varsa bilgiyi göster
-        Wave nextWave = waveSystem.GenerateWave(currentWaveIndex + 1);
+        Wave nextWave = waveSystem.GenerateWave(currentWaveIndex);
         ShowNextWaveInfo(nextWave);
 
         // Düþmanlarý spawn et
         yield return StartCoroutine(SpawnWave(wave));
-
-        // Wave tamamlandý
-        currentWaveIndex++;
 
         // Wave info tekrar gösterilsin, space ile baþlatýlabilir olsun
         ShowWaveInfo();

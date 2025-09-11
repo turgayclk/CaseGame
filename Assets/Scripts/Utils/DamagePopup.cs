@@ -15,4 +15,10 @@ public class DamagePopup : MonoBehaviour
         transform.DOMoveY(transform.position.y + 2f, 4f).SetEase(Ease.OutCubic);
         damageText.DOFade(0, 4f).OnComplete(() => Destroy(gameObject));
     }
+
+    private void OnDestroy()
+    {
+        DOTween.Kill(transform);
+        DOTween.Kill(damageText);
+    }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 [System.Serializable]
 public class WaveSystem
 {
-    public Wave firstWave;             // Inspector'dan eklenen ilk wave
-    public float enemyCountMultiplier = 1.2f; // Dalga arttýkça enemy sayýsý artýþý
+    public Wave firstWave;             
+    public float enemyCountMultiplier = 1.2f;
 
     public EnemyType normalEnemy;
     public EnemyType speedEnemy;
