@@ -1,5 +1,6 @@
-using UnityEngine;
+using DG.Tweening;
 using System;
+using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class Health : MonoBehaviour, IDamageable
@@ -10,7 +11,7 @@ public class Health : MonoBehaviour, IDamageable
     public static event Action OnDeath;
 
     [Header("I-Frames (optional)")]
-    public float iFrameDuration = 0f;
+    public float iFrameDuration = 0.5f;
     private float iFrameTimer;
 
     private SpriteRenderer sr;
@@ -50,13 +51,60 @@ public class Health : MonoBehaviour, IDamageable
         }
     }
 
+    public void Revive()
+    {
+        currentHealth = maxHealth;
+        Debug.Log("Revived with full HP!");
+
+        // Geçici olarak damage kapalý
+        StartCoroutine(ReviveRoutine());
+    }
+
+    private System.Collections.IEnumerator ReviveRoutine()
+    {
+        float duration = 2f;
+        iFrameTimer = duration;
+
+        if (sr != null)
+        {
+            // Önce varsa eski tween'i iptal et
+            sr.DOKill();
+
+            // Yanýp sönme efekti: alpha 1 - 0.3 gidip gelecek
+            sr.DOFade(0.3f, 0.3f)
+              .SetLoops(-1, LoopType.Yoyo)
+              .SetEase(Ease.InOutSine);
+        }
+
+        yield return new WaitForSeconds(duration);
+
+        if (sr != null)
+        {
+            sr.DOKill(); // tween'i bitir
+            sr.DOFade(1f, 0.1f); // alpha'yý tamamen eski haline getir
+        }
+    }
+
     private System.Collections.IEnumerator Flash()
     {
         if (sr == null) yield break;
-        var orig = sr.color;
-        sr.color = Color.white;
-        yield return new WaitForSeconds(0.08f);
-        sr.color = orig;
+
+        Color original = sr.color;
+        Color hitColor = Color.red;
+        float duration = 0.3f; // fade süresi
+        float timer = 0f;
+
+        // Hemen kýrmýzýya geç
+        sr.color = hitColor;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            sr.color = Color.Lerp(hitColor, original, timer / duration);
+            yield return null;
+        }
+
+        sr.color = original; // kesin olarak orijinal renk
     }
 
     public void Heal(float amount)

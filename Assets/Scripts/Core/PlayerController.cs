@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.IsGameOver) return;
+
         float h = Input.GetAxisRaw("Horizontal"); // A-D
         float v = Input.GetAxisRaw("Vertical");   // W-S
 

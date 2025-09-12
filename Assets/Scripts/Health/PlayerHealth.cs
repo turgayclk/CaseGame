@@ -30,6 +30,13 @@ public class PlayerHealth : MonoBehaviour
         Health.OnDeath -= HandleDeath;
     }
 
+    public void Revive()
+    {
+        deathUI.SetActive(false);
+
+        health.Revive();
+    }
+
     private void Start()
     {
         if (healthSlider != null)

@@ -19,6 +19,8 @@ public class PlayerCombat : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.IsGameOver) return;
+
         cooldownTimer -= Time.deltaTime;
         if (cooldownTimer <= 0f)
         {
@@ -41,24 +43,17 @@ public class PlayerCombat : MonoBehaviour
 
                 if (nearest != null)
                 {
+                    animator.SetTrigger("AttackTrigger");
+
                     float randAttackDmg = Random.Range(7, 25);
 
                     DamagePopupManager.Instance.ShowPopup(randAttackDmg, nearest.transform.position);
 
-                    animator.SetTrigger("AttackTrigger");
                     var dmg = nearest.GetComponent<IDamageable>();
                     if (dmg != null)
                     {
                         Debug.Log("Enemy Controller Hit!");
                         dmg.TakeDamage(randAttackDmg);
-                    }
-                    else
-                    {
-                        Debug.Log("Enemy Hit! : Health Script");
-
-                        // eðer Health component varsa:
-                        var h = nearest.GetComponent<Health>();
-                        if (h != null) h.TakeDamage(randAttackDmg);
                     }
 
                     // reset cooldown

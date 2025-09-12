@@ -64,10 +64,22 @@ public class EnemyController : MonoBehaviour, IDamageable
     private System.Collections.IEnumerator Flash()
     {
         if (spriteRenderer == null) yield break;
-        var orig = spriteRenderer.material.color;
-        spriteRenderer.material.color = Color.white;
-        yield return new WaitForSeconds(0.15f);
-        spriteRenderer.material.color = orig;
+         
+        Color original = spriteRenderer.material.color;
+        Color hitColor = Color.red;
+        float duration = 0.3f;
+        float timer = 0f;
+
+        spriteRenderer.material.color = hitColor;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            spriteRenderer.material.color = Color.Lerp(hitColor, original, timer / duration);
+            yield return null;
+        }
+
+        spriteRenderer.material.color = original;
     }
 
     private void Update()
@@ -94,11 +106,10 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         Debug.Log($"{type.enemyName} reached the end!");
 
-        // Player'a hasar ver
-        var player = Object.FindFirstObjectByType<PlayerHealth>();
+        var player = Object.FindFirstObjectByType<Health>(); // direkt Health scriptini bul
         if (player != null)
         {
-            player.GetComponent<Health>().TakeDamage(type.damage);
+            player.TakeDamage(type.damage); // Health scriptindeki I-frame zaten devreye girecek
         }
 
         Destroy(gameObject);
