@@ -15,3 +15,10 @@ The game is a simple tower defense prototype made with Unity.
 ## Notes
 - Player HP decreases when enemies finish the path.  
 - Waves spawn automatically, but a button could be added to call waves earlier.  
+
+### Extra: Player Death & Revive
+- When the player dies, two options are presented:
+  - **Restart**: Reloads the scene and restarts the game loop from wave 1.  
+  - **Revive**: Player respawns on the same wave with full HP.  
+    - A short invulnerability window (I-Frame) is granted after reviving.  
+    - This state is visually represented with a blinking effect (implemented with DOTween).  
