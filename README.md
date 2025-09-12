@@ -14,7 +14,8 @@ The game is a simple tower defense prototype made with Unity.
 
 ## Notes
 - Player HP decreases when enemies finish the path.  
-- Waves spawn automatically, but a button could be added to call waves earlier.  
+- Waves do **not** spawn automatically. Pressing the Space key starts the first wave, and pressing it again can trigger subsequent waves manually.
+
 
 ### Extra: Player Death & Revive
 - When the player dies, two options are presented:
