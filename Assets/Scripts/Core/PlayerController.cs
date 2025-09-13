@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
 
-    private const float playerScale = 1.5f;
+    private const float playerScale = 1f;
 
     private Transform cam;
     [SerializeField] Animator anim;

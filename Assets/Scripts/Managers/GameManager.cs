@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
 
     public bool IsGameOver => gameOver;
 
+    public static event Action OnPlayerRevive;
+
     private void OnEnable()
     {
         Health.OnDeath += HandleDeath;
@@ -65,6 +67,8 @@ public class GameManager : MonoBehaviour
     {
         gameOver = false;
         Time.timeScale = 1f;
+
+        OnPlayerRevive?.Invoke();
 
         PlayerHealth playerHealth = FindFirstObjectByType<PlayerHealth>();
         if (playerHealth != null)

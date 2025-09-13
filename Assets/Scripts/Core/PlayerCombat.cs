@@ -4,13 +4,13 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     [Header("Attack")]
-    public float attackRange = 1.2f;
-    public float attackCooldown = 0.8f;
+    public float attackRange = 1f;
+    public float attackCooldown = 0.8f; // saldýrýlar arasý bekleme
     public LayerMask enemyLayer;
 
     private float cooldownTimer = 0f;
-
-    Animator animator;
+    private bool isAttacking = false;
+    private Animator animator;
 
     private void Start()
     {
@@ -21,45 +21,55 @@ public class PlayerCombat : MonoBehaviour
     {
         if (GameManager.Instance.IsGameOver) return;
 
-        cooldownTimer -= Time.deltaTime;
-        if (cooldownTimer <= 0f)
+        Debug.Log(cooldownTimer);
+
+        // Eðer þu an cooldown içindeysek zaman say
+        if (isAttacking)
         {
-            // en yakýn düþmaný bul
-            Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
-            if (hits.Length > 0)
+            cooldownTimer -= Time.deltaTime;
+            if (cooldownTimer <= 0f)
             {
-                // en yakýn olan
-                Collider nearest = null;
-                float minDist = float.MaxValue;
-                foreach (var c in hits)
+                isAttacking = false; // tekrar saldýrabilir
+            }
+            return; // cooldown bitene kadar çýk
+        }
+
+        // Yeni saldýrý baþlatabilir mi?
+        Collider[] hits = Physics.OverlapSphere(transform.position, attackRange, enemyLayer);
+        if (hits.Length > 0)
+        {
+            Collider nearest = null;
+            float minDist = float.MaxValue;
+
+            foreach (var c in hits)
+            {
+                float d = Vector3.SqrMagnitude(c.transform.position - transform.position);
+                if (d < minDist)
                 {
-                    float d = Vector3.SqrMagnitude(c.transform.position - transform.position);
-                    if (d < minDist)
-                    {
-                        minDist = d;
-                        nearest = c;
-                    }
+                    minDist = d;
+                    nearest = c;
+                }
+            }
+
+            if (nearest != null)
+            {
+                animator.SetTrigger("AttackTrigger");
+
+
+                float randAttackDmg = Random.Range(7, 25);
+
+                DamagePopupManager.Instance.ShowPopup(randAttackDmg, nearest.transform.position);
+
+                var dmg = nearest.GetComponent<IDamageable>();
+                if (dmg != null)
+                {
+                    Debug.Log("Enemy Controller Hit!");
+                    dmg.TakeDamage(randAttackDmg);
                 }
 
-                if (nearest != null)
-                {
-                    animator.SetTrigger("AttackTrigger");
-
-                    float randAttackDmg = Random.Range(7, 25);
-
-                    DamagePopupManager.Instance.ShowPopup(randAttackDmg, nearest.transform.position);
-
-                    var dmg = nearest.GetComponent<IDamageable>();
-                    if (dmg != null)
-                    {
-                        Debug.Log("Enemy Controller Hit!");
-                        dmg.TakeDamage(randAttackDmg);
-                    }
-
-                    // reset cooldown
-                    cooldownTimer = attackCooldown;
-                    // (opsiyonel) animasyon / vfx tetikle
-                }
+                // Cooldown baþlat
+                isAttacking = true;
+                cooldownTimer = attackCooldown;
             }
         }
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using System;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -22,11 +23,21 @@ public class EnemySpawner : MonoBehaviour
     private void OnEnable()
     {
         Health.OnDeath += PlayerDeath;
+        GameManager.OnPlayerRevive += OnPlayerRevive_GameManager;
     }
 
     private void OnDisable()
     {
         Health.OnDeath -= PlayerDeath;
+        GameManager.OnPlayerRevive -= OnPlayerRevive_GameManager;
+    }
+
+    private void OnPlayerRevive_GameManager()
+    {
+        waveKeyInfo.gameObject.SetActive(true);
+        waveStartText.gameObject.SetActive(true);
+        nextWaveInfoText.gameObject.SetActive(true);
+        nextWaveInfoBG.gameObject.SetActive(true);
     }
 
     private void Start()
@@ -136,18 +147,21 @@ public class EnemySpawner : MonoBehaviour
 
     private void SpawnEnemy(EnemyType type)
     {
-        if (type == null || type.prefab == null)
+        if (type == null || string.IsNullOrEmpty(type.poolTag))
         {
             Debug.LogWarning("EnemyType eksik!");
             return;
         }
 
-        GameObject enemy = Instantiate(type.prefab, pathPoints[0].position, type.prefab.transform.rotation);
+        GameObject enemy = ObjectPool.Instance.SpawnFromPool(type.poolTag, pathPoints[0].position, type.prefab.transform.rotation);
 
-        EnemyController enemyController = enemy.GetComponent<EnemyController>();
-        if (enemyController != null)
+        if (enemy != null)
         {
-            enemyController.Initialize(type, pathPoints);
+            EnemyController enemyController = enemy.GetComponent<EnemyController>();
+            if (enemyController != null)
+            {
+                enemyController.Initialize(type, pathPoints);
+            }
         }
     }
 

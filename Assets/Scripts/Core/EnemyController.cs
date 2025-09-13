@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     private int currentWaypointIndex;
     private Transform[] pathPoints;
     private Renderer spriteRenderer;
+    [SerializeField] private ParticleSystem bloodEffect;
 
     [Header("UI")]
     [SerializeField] private Slider healthBar; // Canvas içindeki Scrollbar
@@ -46,6 +47,11 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         // visual flash effect
         if (spriteRenderer != null) StartCoroutine(Flash());
+
+        if (bloodEffect != null)
+        {
+            bloodEffect.Play();
+        }
 
         // HealthBar güncelle
         if (healthBar != null)
@@ -112,12 +118,12 @@ public class EnemyController : MonoBehaviour, IDamageable
             player.TakeDamage(type.damage); // Health scriptindeki I-frame zaten devreye girecek
         }
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     private void Die()
     {
         Debug.Log($"{type.enemyName} died! +{type.rewardGold} gold");
-        Destroy(gameObject);
+        gameObject.SetActive(false); 
     }
 }

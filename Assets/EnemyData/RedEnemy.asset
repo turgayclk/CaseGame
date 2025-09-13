@@ -15,6 +15,7 @@ MonoBehaviour:
   enemyName: Normal
   sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   tint: {r: 0.6792453, g: 0, b: 0, a: 1}
+  poolTag: Normal
   prefab: {fileID: 3796460613111880166, guid: 476f5f6f85612d148a8b782cd4942dbd, type: 3}
   maxHealth: 60
   moveSpeed: 2
