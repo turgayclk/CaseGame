@@ -21,8 +21,6 @@ public class PlayerCombat : MonoBehaviour
     {
         if (GameManager.Instance.IsGameOver) return;
 
-        Debug.Log(cooldownTimer);
-
         // Eðer þu an cooldown içindeysek zaman say
         if (isAttacking)
         {

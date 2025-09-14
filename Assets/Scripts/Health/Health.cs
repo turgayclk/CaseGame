@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class Health : MonoBehaviour, IDamageable
@@ -15,6 +16,9 @@ public class Health : MonoBehaviour, IDamageable
     private float iFrameTimer;
 
     private SpriteRenderer sr;
+
+    [SerializeField] private Image damageOverlay;
+    [SerializeField] private GameObject bloodDarkEffect;
 
     private void Awake()
     {
@@ -31,16 +35,31 @@ public class Health : MonoBehaviour, IDamageable
 
     public void TakeDamage(float amount)
     {
-        if (iFrameTimer > 0f) return; // invulnerable
+        if (iFrameTimer > 0f) return;
 
         currentHealth -= amount;
-
-        currentHealth = Mathf.Max(currentHealth, 0f); // Saðlýk 0'ýn altýna düþmesin
+        currentHealth = Mathf.Max(currentHealth, 0f);
 
         Debug.Log($"{gameObject.name} took {amount} damage. HP: {currentHealth}");
 
-        // (isteðe baðlý) visual flash:
         if (sr != null) StartCoroutine(Flash());
+
+        Camera.main.transform.DOShakePosition(0.8f, strength: new Vector3(0.4f, 0.4f, 0));
+
+        damageOverlay.gameObject.SetActive(true);
+        bloodDarkEffect.SetActive(true);
+
+        // Blood overlay yanýp sönsün
+        if (damageOverlay != null)
+        {
+            damageOverlay.DOKill();
+            damageOverlay.DOFade(0.4f, 1f)
+                .OnComplete(() => 
+                {   damageOverlay.DOFade(0f, 1f); 
+                    damageOverlay.gameObject.SetActive(false);
+                    bloodDarkEffect.SetActive(false);
+                });
+        }
 
         if (iFrameDuration > 0f) iFrameTimer = iFrameDuration;
 
@@ -91,7 +110,7 @@ public class Health : MonoBehaviour, IDamageable
 
         Color original = sr.color;
         Color hitColor = Color.red;
-        float duration = 0.3f; // fade süresi
+        float duration = 0.8f; // fade süresi
         float timer = 0f;
 
         // Hemen kýrmýzýya geç

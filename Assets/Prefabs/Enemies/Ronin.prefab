@@ -5044,8 +5044,9 @@ GameObject:
   - component: {fileID: 9136055194801582920}
   - component: {fileID: 3748751430715898624}
   - component: {fileID: 3691259800798236903}
+  - component: {fileID: 6026675529037996587}
   m_Layer: 3
-  m_Name: Enemy
+  m_Name: Ronin
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5060,8 +5061,8 @@ Transform:
   m_GameObject: {fileID: 3796460613111880166}
   serializedVersion: 2
   m_LocalRotation: {x: 0.30427146, y: 0.614034, z: -0.32336146, w: 0.65254766}
-  m_LocalPosition: {x: -4.68, y: 0.52, z: 9.92}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalPosition: {x: -4.611, y: 0.572, z: 9.92}
+  m_LocalScale: {x: 1.75, y: 1.75, z: 1.75}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 682984239812407347}
@@ -5112,7 +5113,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: -1495044857, guid: f8029e5fd5b36f244934375959857710, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5142,8 +5143,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.1759169, y: 0.16171323, z: 0.04343369}
-  m_Center: {x: -0.0014781953, y: -0.00006468318, z: -0.010105941}
+  m_Size: {x: 0.2722375, y: 0.4299122, z: 0.043433685}
+  m_Center: {x: 0.0865461, y: -0.019935353, z: -0.010104056}
 --- !u!54 &3748751430715898624
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5185,6 +5186,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bloodEffect: {fileID: 3327285809525823844}
   healthBar: {fileID: 4775153408412647384}
+--- !u!95 &6026675529037996587
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3796460613111880166}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 66eef169ec9d6e34b8dfaa753a6a18f3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4383315110244044630
 GameObject:
   m_ObjectHideFlags: 0
@@ -5386,7 +5409,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.005, y: 0.11}
+  m_AnchoredPosition: {x: 0.107, y: 0.277}
   m_SizeDelta: {x: 1.9958, y: 0.4691}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &2511584604135826750

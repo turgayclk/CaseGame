@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI; // Scrollbar için gerekli
+using System.Collections;
 
 public class EnemyController : MonoBehaviour, IDamageable
 {
@@ -15,6 +16,11 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     public bool IsAlive => currentHealth > 0;
 
+    private Animator animator;
+
+    private bool isStunned = false;   // hareketi durdurmak için
+    private Coroutine stunCoroutine;  // tekrar damage alýrsa eski coroutine’i iptal etmek için
+
     public void Initialize(EnemyType enemyType, Transform[] path)
     {
         type = enemyType;
@@ -22,25 +28,34 @@ public class EnemyController : MonoBehaviour, IDamageable
         currentWaypointIndex = 0;
         currentHealth = type.maxHealth;
 
+        animator = GetComponent<Animator>();
+
         Vector3 pos = new Vector3(Random.Range(-5.35f, -3.8f), pathPoints[0].position.y, pathPoints[0].position.z);
         transform.position = pos;
-
-        // Sprite veya renk uygula
-        spriteRenderer = GetComponentInChildren<Renderer>();
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.material.color = type.tint;
-        }
 
         if (healthBar != null)
         {
             healthBar.value = 1f; // tam dolu
         }
+
+        if (enemyType.isBoss)
+        {
+            transform.localScale = Vector3.one * 10f; // büyük gözüksün
+        }
+    }
+
+    private void Start()
+    {
+        healthBar.gameObject.SetActive(false);
     }
 
     public void TakeDamage(float amount)
     {
         if (!IsAlive) return;
+
+        healthBar.gameObject.SetActive(true);
+
+        animator.SetTrigger("HurtTrigger");
 
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, type.maxHealth); // 0 altýna düþmesini engelle
@@ -61,16 +76,29 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         Debug.Log($"{type.enemyName} took {amount} damage. HP: {currentHealth}");
 
+        // --- Burada stun baþlatýyoruz ---
+        if (stunCoroutine != null) StopCoroutine(stunCoroutine); // eðer eski stun varsa iptal et
+        stunCoroutine = StartCoroutine(Stun(0.5f));
+
         if (currentHealth <= 0)
         {
             Die();
         }
     }
 
-    private System.Collections.IEnumerator Flash()
+    private IEnumerator Stun(float duration)
+    {
+        isStunned = true;
+        yield return new WaitForSeconds(duration);
+
+        // Eðer stun süresince tekrar damage almadýysa - yürümeye devam
+        isStunned = false;
+    }
+
+    private IEnumerator Flash()
     {
         if (spriteRenderer == null) yield break;
-         
+
         Color original = spriteRenderer.material.color;
         Color hitColor = Color.red;
         float duration = 0.3f;
@@ -91,6 +119,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     private void Update()
     {
         if (!IsAlive || pathPoints == null || pathPoints.Length == 0) return;
+        if (isStunned) return; // hasar aldýysa 0.5 saniye boyunca hareket yok
 
         Transform target = pathPoints[currentWaypointIndex];
         Vector3 dir = target.position - transform.position;
@@ -112,6 +141,21 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         Debug.Log($"{type.enemyName} reached the end!");
 
+        StartCoroutine(WaitAttackAnim());
+    }
+
+    private void Die()
+    {
+        Debug.Log($"{type.enemyName} died! +{type.rewardGold} gold");
+
+        StartCoroutine(WaitDieAnim());
+    }
+
+    IEnumerator WaitAttackAnim()
+    {
+        animator.SetTrigger("AttackTrigger");
+        yield return new WaitForSeconds(0.75f);
+
         var player = Object.FindFirstObjectByType<Health>(); // direkt Health scriptini bul
         if (player != null)
         {
@@ -121,9 +165,13 @@ public class EnemyController : MonoBehaviour, IDamageable
         gameObject.SetActive(false);
     }
 
-    private void Die()
+    IEnumerator WaitDieAnim()
     {
-        Debug.Log($"{type.enemyName} died! +{type.rewardGold} gold");
-        gameObject.SetActive(false); 
+        healthBar.gameObject.SetActive(false);
+        animator.SetTrigger("DieTrigger");
+
+        yield return new WaitForSeconds(0.8f);
+        
+        gameObject.SetActive(false);
     }
 }

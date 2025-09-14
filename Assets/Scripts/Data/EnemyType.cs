@@ -6,8 +6,8 @@ public class EnemyType : ScriptableObject
     [Header("Identity")]
     public string enemyName;
     public Sprite sprite;
-    public Color tint = Color.white;
     public string poolTag;
+    public bool isBoss;
 
     [Header("Prefab")]
     public GameObject prefab; 
