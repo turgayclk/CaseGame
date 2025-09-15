@@ -44,7 +44,7 @@ public class Health : MonoBehaviour, IDamageable
 
         if (sr != null) StartCoroutine(Flash());
 
-        Camera.main.transform.DOShakePosition(0.8f, strength: new Vector3(0.4f, 0.4f, 0));
+        Camera.main.transform.DOShakePosition(1f, strength: new Vector3(0.4f, 0.4f, 0));
 
         damageOverlay.gameObject.SetActive(true);
         bloodDarkEffect.SetActive(true);

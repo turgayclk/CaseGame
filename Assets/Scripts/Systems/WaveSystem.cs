@@ -7,9 +7,9 @@ public class WaveSystem
     public Wave firstWave;
     public float enemyCountMultiplier = 1.2f;
 
-    public EnemyType normalEnemy;
-    public EnemyType speedEnemy;
-    public EnemyType tankEnemy;
+    public EnemyType roninEnemy;
+    public EnemyType CanineEnemy;
+    public EnemyType ninjaEnemy;
     public EnemyType bossEnemy;
 
     public Wave GenerateWave(int waveIndex)
@@ -36,15 +36,15 @@ public class WaveSystem
         }
 
         // Normal wave hesaplamasý
-        WaveEnemy normal = new WaveEnemy();
-        normal.enemyType = normalEnemy;
-        normal.count = Mathf.CeilToInt(firstWave.enemies[0].count * Mathf.Pow(enemyCountMultiplier, waveIndex));
-        enemies.Add(normal);
+        WaveEnemy ronin = new WaveEnemy();
+        ronin.enemyType = roninEnemy;
+        ronin.count = Mathf.CeilToInt(firstWave.enemies[0].count * Mathf.Pow(enemyCountMultiplier, waveIndex));
+        enemies.Add(ronin);
 
         if (waveIndex >= 1) 
         {
             WaveEnemy speed = new WaveEnemy();
-            speed.enemyType = speedEnemy;
+            speed.enemyType = CanineEnemy;
 
             int relativeWave = waveIndex - 1; // 2. wave’de 0’dan baþlasýn
             speed.count = Mathf.CeilToInt(1 * Mathf.Pow(enemyCountMultiplier, relativeWave));
@@ -54,7 +54,7 @@ public class WaveSystem
         if (waveIndex >= 2)
         {
             WaveEnemy tank = new WaveEnemy();
-            tank.enemyType = tankEnemy;
+            tank.enemyType = ninjaEnemy;
 
             int relativeWave = waveIndex - 2; // 3. wave’de 0’dan baþlasýn
             tank.count = Mathf.CeilToInt(1 * Mathf.Pow(enemyCountMultiplier, relativeWave));

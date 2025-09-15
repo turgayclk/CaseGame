@@ -40,7 +40,10 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         if (enemyType.isBoss)
         {
-            transform.localScale = Vector3.one * 10f; // büyük gözüksün
+            transform.localScale = Vector3.one * 3; // büyük gözüksün
+            Vector3 scale = transform.localScale;
+            scale.x = scale.x * -1; // boss ters dönük baþlasýn
+            transform.localScale = scale;
         }
     }
 
@@ -170,7 +173,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         healthBar.gameObject.SetActive(false);
         animator.SetTrigger("DieTrigger");
 
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(1f);
         
         gameObject.SetActive(false);
     }
