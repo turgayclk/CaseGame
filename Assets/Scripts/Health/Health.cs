@@ -20,10 +20,14 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] private Image damageOverlay;
     [SerializeField] private GameObject bloodDarkEffect;
 
+    private Animator animator;
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         currentHealth = maxHealth;
+
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -36,6 +40,8 @@ public class Health : MonoBehaviour, IDamageable
     public void TakeDamage(float amount)
     {
         if (iFrameTimer > 0f) return;
+
+        animator.SetTrigger("HurtTrigger");
 
         currentHealth -= amount;
         currentHealth = Mathf.Max(currentHealth, 0f);
@@ -108,6 +114,14 @@ public class Health : MonoBehaviour, IDamageable
     {
         if (sr == null) yield break;
 
+        // Eðer player ölü ise direkt orijinal renge dön
+        if (!IsAlive)
+        {
+            sr.DOKill();        // Tween varsa iptal et
+            sr.color = Color.white; // veya istediðin default renk
+            yield break;
+        }
+
         Color original = sr.color;
         Color hitColor = Color.red;
         float duration = 0.8f; // fade süresi
@@ -118,6 +132,13 @@ public class Health : MonoBehaviour, IDamageable
 
         while (timer < duration)
         {
+            // Ölü olup olmadýðýný sürekli kontrol et
+            if (!IsAlive)
+            {
+                sr.color = Color.white;
+                yield break;
+            }
+
             timer += Time.deltaTime;
             sr.color = Color.Lerp(hitColor, original, timer / duration);
             yield return null;

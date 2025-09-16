@@ -1,6 +1,8 @@
+using DG.Tweening;
+using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI; // Scrollbar için gerekli
-using System.Collections;
 
 public class EnemyController : MonoBehaviour, IDamageable
 {
@@ -21,6 +23,22 @@ public class EnemyController : MonoBehaviour, IDamageable
     private bool isStunned = false;   // hareketi durdurmak için
     private Coroutine stunCoroutine;  // tekrar damage alýrsa eski coroutine’i iptal etmek için
 
+    [SerializeField] private Transform cameraRig;
+
+    private float deadAnimationDuration;
+
+    private void OnEnable()
+    {
+        if (EnemyManager.Instance != null)
+            EnemyManager.Instance.RegisterEnemy(transform);
+    }
+
+    private void OnDisable()
+    {
+        if (EnemyManager.Instance != null)
+            EnemyManager.Instance.UnregisterEnemy(transform);
+    }
+
     public void Initialize(EnemyType enemyType, Transform[] path)
     {
         type = enemyType;
@@ -40,11 +58,22 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         if (enemyType.isBoss)
         {
+            transform.position = new Vector3(pathPoints[0].position.x, pathPoints[0].position.y, pathPoints[0].position.z);
+
             transform.localScale = Vector3.one * 3; // büyük gözüksün
             Vector3 scale = transform.localScale;
             scale.x = scale.x * -1; // boss ters dönük baþlasýn
             transform.localScale = scale;
+
+            deadAnimationDuration = 1.25f;
         }
+        else
+        {
+            deadAnimationDuration = 1f;
+        }
+
+        if (cameraRig == null)
+            cameraRig = GameObject.Find("CameraRig").transform;
     }
 
     private void Start()
@@ -79,7 +108,7 @@ public class EnemyController : MonoBehaviour, IDamageable
 
         Debug.Log($"{type.enemyName} took {amount} damage. HP: {currentHealth}");
 
-        // --- Burada stun baþlatýyoruz ---
+        // Stun effect
         if (stunCoroutine != null) StopCoroutine(stunCoroutine); // eðer eski stun varsa iptal et
         stunCoroutine = StartCoroutine(Stun(0.5f));
 
@@ -87,6 +116,17 @@ public class EnemyController : MonoBehaviour, IDamageable
         {
             Die();
         }
+    }
+    public void ShakeCam()
+    {
+        cameraRig.DOShakePosition(
+            0.5f, // süre
+            strength: new Vector3(0.12f, 0.12f, 0),
+            vibrato: 7,
+            randomness: 60,
+            snapping: false,
+            fadeOut: true
+        );
     }
 
     private IEnumerator Stun(float duration)
@@ -123,6 +163,7 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         if (!IsAlive || pathPoints == null || pathPoints.Length == 0) return;
         if (isStunned) return; // hasar aldýysa 0.5 saniye boyunca hareket yok
+        if (currentWaypointIndex >= pathPoints.Length) return; // taþmayý engelle
 
         Transform target = pathPoints[currentWaypointIndex];
         Vector3 dir = target.position - transform.position;
@@ -157,6 +198,8 @@ public class EnemyController : MonoBehaviour, IDamageable
     IEnumerator WaitAttackAnim()
     {
         animator.SetTrigger("AttackTrigger");
+
+
         yield return new WaitForSeconds(0.75f);
 
         var player = Object.FindFirstObjectByType<Health>(); // direkt Health scriptini bul
@@ -173,7 +216,7 @@ public class EnemyController : MonoBehaviour, IDamageable
         healthBar.gameObject.SetActive(false);
         animator.SetTrigger("DieTrigger");
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(deadAnimationDuration);
         
         gameObject.SetActive(false);
     }

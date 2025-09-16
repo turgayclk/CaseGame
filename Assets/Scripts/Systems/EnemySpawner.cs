@@ -8,6 +8,7 @@ public class EnemySpawner : MonoBehaviour
 {
     [Header("Spawner Settings")]
     [SerializeField] private Transform[] pathPoints;
+    [SerializeField] private Transform[] bossPathPoints;
     [SerializeField] private WaveSystem waveSystem;
 
     [Header("UI")]
@@ -153,14 +154,23 @@ public class EnemySpawner : MonoBehaviour
             return;
         }
 
-        GameObject enemy = ObjectPool.Instance.SpawnFromPool(type.poolTag, pathPoints[0].position, type.prefab.transform.rotation);
+        // spawn noktasýný seç (boss ise boss yolunun ilk noktasý, deðilse normal yolun)
+        Transform spawnPoint = type.isBoss ? bossPathPoints[0] : pathPoints[0];
+
+        GameObject enemy = ObjectPool.Instance.SpawnFromPool(
+            type.poolTag,
+            spawnPoint.position,
+            type.prefab.transform.rotation
+        );
 
         if (enemy != null)
         {
             EnemyController enemyController = enemy.GetComponent<EnemyController>();
             if (enemyController != null)
             {
-                enemyController.Initialize(type, pathPoints);
+                // boss mu normal mi ona göre yol ver
+                Transform[] path = type.isBoss ? bossPathPoints : pathPoints;
+                enemyController.Initialize(type, path);
             }
         }
     }

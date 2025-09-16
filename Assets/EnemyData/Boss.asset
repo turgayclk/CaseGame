@@ -17,7 +17,7 @@ MonoBehaviour:
   poolTag: Boss
   isBoss: 1
   prefab: {fileID: 3796460613111880166, guid: a7a8c9fc686d4c24ab9bc54b2220ec4b, type: 3}
-  maxHealth: 1250
+  maxHealth: 1000
   moveSpeed: 0.75
   damage: 75
   rewardGold: 10
