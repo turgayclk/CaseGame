@@ -10,17 +10,22 @@ public class PlayerController : MonoBehaviour
     private Transform cam;
     [SerializeField] Animator anim;
 
+    private Health health;
+
     bool isWalking;
 
     private void Start()
     {
         cam = Camera.main.transform; // ana kamerayý alýyoruz
         anim = GetComponent<Animator>();
+
+        health = GetComponent<Health>();
     }
 
     private void Update()
     {
         if (GameManager.Instance.IsGameOver) return;
+        if (health.IsDamaged) return;
 
         float h = Input.GetAxisRaw("Horizontal"); // A-D
         float v = Input.GetAxisRaw("Vertical");   // W-S

@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,15 @@ public class Health : MonoBehaviour, IDamageable
 
     private Animator animator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource playerSource;
+
+    [SerializeField] private AudioClip[] hurtSoundEffects;
+    [SerializeField] private AudioClip dieSoundEffect;
+
+    private bool isDamaged = false;
+    public bool IsDamaged => isDamaged;
+
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -40,6 +50,16 @@ public class Health : MonoBehaviour, IDamageable
     public void TakeDamage(float amount)
     {
         if (iFrameTimer > 0f) return;
+        if (isDamaged) return;
+
+        isDamaged = true;
+
+        // rastgele hasar sesi çal
+        if (playerSource != null && hurtSoundEffects.Length > 0)
+        {
+            int index = UnityEngine.Random.Range(0, hurtSoundEffects.Length);
+            playerSource.PlayOneShot(hurtSoundEffects[index]);
+        }
 
         animator.SetTrigger("HurtTrigger");
 
@@ -59,7 +79,7 @@ public class Health : MonoBehaviour, IDamageable
         if (damageOverlay != null)
         {
             damageOverlay.DOKill();
-            damageOverlay.DOFade(0.4f, 1f)
+            damageOverlay.DOFade(0.4f, 0.8f)
                 .OnComplete(() => 
                 {   damageOverlay.DOFade(0f, 1f); 
                     damageOverlay.gameObject.SetActive(false);
@@ -74,6 +94,14 @@ public class Health : MonoBehaviour, IDamageable
             currentHealth = 0f;
             Die();
         }
+
+        StartCoroutine(SetIsDamaged());
+    }
+
+    IEnumerator SetIsDamaged()
+    {
+        yield return new WaitForSeconds(0.8f);
+        isDamaged = false;
     }
 
     public void Revive()
@@ -154,7 +182,13 @@ public class Health : MonoBehaviour, IDamageable
 
     private void Die()
     {
+        // Ölüm sesi çal
+        if (playerSource != null && dieSoundEffect != null)
+        {
+            playerSource.PlayOneShot(dieSoundEffect);
+        }
+
         OnDeath?.Invoke();
-        
+
     }
 }

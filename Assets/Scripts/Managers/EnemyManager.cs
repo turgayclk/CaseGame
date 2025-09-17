@@ -1,12 +1,15 @@
-using UnityEngine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance;
 
     [SerializeField] private List<Transform> activeEnemies = new List<Transform>();
+
+    public static event Action OnEnemyCountChanged; 
 
     private void Awake()
     {
@@ -16,25 +19,26 @@ public class EnemyManager : MonoBehaviour
     public void RegisterEnemy(Transform enemy)
     {
         if (!activeEnemies.Contains(enemy))
+        {
             activeEnemies.Add(enemy);
+            OnEnemyCountChanged?.Invoke();
+        }
     }
 
     public void UnregisterEnemy(Transform enemy)
     {
         if (activeEnemies.Contains(enemy))
+        {
             activeEnemies.Remove(enemy);
+            OnEnemyCountChanged?.Invoke();
+        }
     }
 
     public List<Transform> GetActiveEnemies()
     {
-        // Sadece aktif olanlarý al
-        var currentlyActive = activeEnemies.Where(e => e != null && e.gameObject.activeInHierarchy).ToList();
-
-        // Logla
-        string log = currentlyActive.Count > 0
-            ? "Aktif Enemies: " + string.Join(", ", currentlyActive.Select(e => e.name))
-            : "Aktif Enemy yok";
-        Debug.Log(log);
+        var currentlyActive = activeEnemies
+            .Where(e => e != null && e.gameObject.activeInHierarchy)
+            .ToList();
 
         return currentlyActive;
     }

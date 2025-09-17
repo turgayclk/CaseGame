@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using TMPro;
 
 public class EnemyIndicator : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private Image indicatorIcon; // UI Image (ikon)
+    [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private Transform player;    // Player referansý
 
     private Camera mainCam;
@@ -16,6 +18,9 @@ public class EnemyIndicator : MonoBehaviour
 
         if (indicatorIcon != null)
             indicatorIcon.enabled = false; // baþta gizli olsun
+
+        if (titleText != null)
+            titleText.enabled = false; 
     }
 
     private void Update()
@@ -23,6 +28,7 @@ public class EnemyIndicator : MonoBehaviour
         if (EnemyManager.Instance == null || player == null)
         {
             indicatorIcon.enabled = false;
+            titleText.enabled = false;
             return;
         }
 
@@ -31,6 +37,7 @@ public class EnemyIndicator : MonoBehaviour
         if (enemies == null || enemies.Count == 0)
         {
             indicatorIcon.enabled = false;
+            titleText.enabled = false;
             return;
         }
 
@@ -42,6 +49,7 @@ public class EnemyIndicator : MonoBehaviour
         if (closestEnemy == null)
         {
             indicatorIcon.enabled = false;
+            titleText.enabled = false;
             return;
         }
 
@@ -52,6 +60,7 @@ public class EnemyIndicator : MonoBehaviour
         if (isVisible)
         {
             indicatorIcon.enabled = false; // ekran içindeyse gizle
+            titleText.enabled = false;
             return;
         }
 
@@ -63,6 +72,7 @@ public class EnemyIndicator : MonoBehaviour
 
         // UI ikonunu aktif et
         indicatorIcon.enabled = true;
+        titleText.enabled = true;
 
         // Ýkon açýsýný hesapla (ters)
         float angle = Mathf.Atan2(-dir2D.y, -dir2D.x) * Mathf.Rad2Deg;

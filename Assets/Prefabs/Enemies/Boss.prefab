@@ -5186,6 +5186,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bloodEffect: {fileID: 3327285809525823844}
   healthBar: {fileID: 4775153408412647384}
+  cameraRig: {fileID: 0}
+  deadAnimationDuration: 0
+  enemyHitSource: {fileID: 0}
+  enemyDamageSource: {fileID: 0}
+  hitSoundEffects:
+  - {fileID: 8300000, guid: 775b5c5d3dac91440aab0592bae48957, type: 3}
+  - {fileID: 8300000, guid: 904dc461f5b7d754598d9c35f9adeac0, type: 3}
+  - {fileID: 8300000, guid: f270739bda8b44e4192bdfca2165d8a5, type: 3}
+  - {fileID: 8300000, guid: 0d426934822079a478971c87f630076b, type: 3}
+  - {fileID: 8300000, guid: a9f981c1cd1663e49b39c06907b45e0f, type: 3}
+  damageSoundEffects:
+  - {fileID: 8300000, guid: fc92b25b0d6f61b49937973ea39da11e, type: 3}
+  - {fileID: 8300000, guid: c8aa5378c52d3c94db7473b69c49b1d7, type: 3}
+  - {fileID: 8300000, guid: f567d42fb46c14e40bdd36c4dbfebb5d, type: 3}
+  - {fileID: 8300000, guid: debcdf5393b3acd44b1c05223260dd1c, type: 3}
+  deathSoundEffect: {fileID: 8300000, guid: 4a7cdea35e7670642b3b7c6a8f96ae5a, type: 3}
 --- !u!95 &6026675529037996587
 Animator:
   serializedVersion: 7

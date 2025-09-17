@@ -12,6 +12,10 @@ public class PlayerCombat : MonoBehaviour
     private bool isAttacking = false;
     private Animator animator;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip attackSoundEffect;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -53,6 +57,11 @@ public class PlayerCombat : MonoBehaviour
             {
                 animator.SetTrigger("AttackTrigger");
 
+                // Saldýrý sesi çal
+                if (audioSource != null && attackSoundEffect != null)
+                {
+                    audioSource.PlayOneShot(attackSoundEffect);
+                }
 
                 float randAttackDmg = Random.Range(7, 25);
 

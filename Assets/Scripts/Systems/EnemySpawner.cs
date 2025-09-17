@@ -44,6 +44,9 @@ public class EnemySpawner : MonoBehaviour
     private void Start()
     {
         ShowWaveInfo(); // Baþta gösterilsin
+
+        AudioManager.Instance.HandleMusic();
+
         if (waveStartText != null)
             waveStartText.gameObject.SetActive(false); // baþta kapalý
         if (nextWaveInfoText != null)

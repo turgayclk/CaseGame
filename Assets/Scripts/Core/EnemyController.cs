@@ -25,12 +25,23 @@ public class EnemyController : MonoBehaviour, IDamageable
 
     [SerializeField] private Transform cameraRig;
 
-    private float deadAnimationDuration;
+    [SerializeField] private float deadAnimationDuration;
+
+    [Header("Audio")]
+    [SerializeField] private AudioSource enemyHitSource;
+    [SerializeField] private AudioSource enemyDamageSource;
+
+    [SerializeField] private AudioClip[] hitSoundEffects;
+    [SerializeField] private AudioClip[] damageSoundEffects;
+    [SerializeField] private AudioClip deathSoundEffect;
 
     private void OnEnable()
     {
         if (EnemyManager.Instance != null)
             EnemyManager.Instance.RegisterEnemy(transform);
+
+        enemyHitSource = GameObject.Find("EnemySoundEffect").GetComponent<AudioSource>();
+        enemyDamageSource = GameObject.Find("EnemyDamageSounds").GetComponent<AudioSource>();
     }
 
     private void OnDisable()
@@ -67,10 +78,6 @@ public class EnemyController : MonoBehaviour, IDamageable
 
             deadAnimationDuration = 1.25f;
         }
-        else
-        {
-            deadAnimationDuration = 1f;
-        }
 
         if (cameraRig == null)
             cameraRig = GameObject.Find("CameraRig").transform;
@@ -84,6 +91,20 @@ public class EnemyController : MonoBehaviour, IDamageable
     public void TakeDamage(float amount)
     {
         if (!IsAlive) return;
+
+        // play random hit sound
+        if (hitSoundEffects.Length > 0 && enemyHitSource != null)
+        {
+            int index = Random.Range(0, hitSoundEffects.Length);
+            enemyHitSource.PlayOneShot(hitSoundEffects[index]);
+        }
+
+        // play random damage sound
+        if (damageSoundEffects.Length > 0 && enemyDamageSource != null)
+        {
+            int index = Random.Range(0, damageSoundEffects.Length);
+            enemyDamageSource.PlayOneShot(damageSoundEffects[index]);
+        }
 
         healthBar.gameObject.SetActive(true);
 
@@ -188,13 +209,6 @@ public class EnemyController : MonoBehaviour, IDamageable
         StartCoroutine(WaitAttackAnim());
     }
 
-    private void Die()
-    {
-        Debug.Log($"{type.enemyName} died! +{type.rewardGold} gold");
-
-        StartCoroutine(WaitDieAnim());
-    }
-
     IEnumerator WaitAttackAnim()
     {
         animator.SetTrigger("AttackTrigger");
@@ -211,13 +225,26 @@ public class EnemyController : MonoBehaviour, IDamageable
         gameObject.SetActive(false);
     }
 
+    private void Die()
+    {
+        // Play death sound
+        if (deathSoundEffect != null && enemyDamageSource != null)
+        {
+            enemyDamageSource.PlayOneShot(deathSoundEffect);
+        }
+
+        StartCoroutine(WaitDieAnim());
+    }
+
     IEnumerator WaitDieAnim()
     {
         healthBar.gameObject.SetActive(false);
-        animator.SetTrigger("DieTrigger");
+
+        animator.SetTrigger("DieTrigger"); 
 
         yield return new WaitForSeconds(deadAnimationDuration);
-        
+
         gameObject.SetActive(false);
     }
+
 }
