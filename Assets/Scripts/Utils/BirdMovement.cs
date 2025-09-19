@@ -6,13 +6,13 @@ public class BirdMovement : MonoBehaviour
 {
     [SerializeField] private Transform birdPath;
     [SerializeField] private float moveDuration = 2f;
-    [SerializeField] private float waitTime = 5f;
     [SerializeField] private Animator animator;
-    [SerializeField] private float flipThreshold = 0.05f;
 
     private List<Transform> waypoints = new List<Transform>();
     private Transform bird;
     private Transform currentWaypoint;
+
+    private float waitTime;
 
     private void Start()
     {
@@ -28,27 +28,15 @@ public class BirdMovement : MonoBehaviour
     {
         if (waypoints.Count == 0) return;
 
+        float randomWait = waitTime + Random.Range(8, 16);
+
         // Mevcut waypoint dýþýnda rastgele seçim
-        Transform target;
-        if (currentWaypoint == null)
-        {
-            target = waypoints[Random.Range(0, waypoints.Count)];
-        }
-        else
-        {
-            List<Transform> possibleTargets = new List<Transform>(waypoints);
-            possibleTargets.Remove(currentWaypoint); // ayný waypoint’i çýkar
-            target = possibleTargets[Random.Range(0, possibleTargets.Count)];
-        }
+        Transform target = GetNextWaypoint();
+
+        // Kuþun yönünü belirle
+        UpdateBirdDirection(target.position);
 
         currentWaypoint = target;
-
-        // Kuþun yönünü ayarla
-        float deltaX = target.position.x - bird.position.x;
-        if (Mathf.Abs(deltaX) > flipThreshold)
-        {
-            bird.localScale = new Vector3(Mathf.Sign(deltaX), 1f, 1f);
-        }
 
         // Hareket
         bird.DOMove(target.position, moveDuration)
@@ -63,7 +51,30 @@ public class BirdMovement : MonoBehaviour
                 if (animator != null)
                     animator.SetTrigger("FlyToIdle");
 
-                Invoke(nameof(MoveToNextWaypoint), waitTime);
+                Invoke(nameof(MoveToNextWaypoint), randomWait);
             });
+    }
+
+    private Transform GetNextWaypoint()
+    {
+        if (currentWaypoint == null)
+            return waypoints[Random.Range(0, waypoints.Count)];
+
+        List<Transform> possibleTargets = new List<Transform>(waypoints);
+        possibleTargets.Remove(currentWaypoint); // ayný waypoint’i çýkar
+        return possibleTargets[Random.Range(0, possibleTargets.Count)];
+    }
+
+    private void UpdateBirdDirection(Vector3 targetPos)
+    {
+        Vector3 direction = targetPos - bird.position;
+
+        if (Mathf.Abs(direction.x) > 0.01f)
+        {
+            float newScaleX = Mathf.Sign(direction.x);
+            Vector3 scale = bird.localScale;
+            scale.x = newScaleX;
+            bird.localScale = scale;
+        }
     }
 }

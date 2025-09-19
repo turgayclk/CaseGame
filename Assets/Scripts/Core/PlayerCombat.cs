@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System.Collections; // IEnumerator için bu kütüphaneyi ekle
 using UnityEngine;
 
 [RequireComponent(typeof(Health))]
@@ -5,7 +7,8 @@ public class PlayerCombat : MonoBehaviour
 {
     [Header("Attack")]
     public float attackRange = 1f;
-    public float attackCooldown = 0.8f; // saldýrýlar arasý bekleme
+    public float attackCooldown = 0.8f;
+    public float animationDuration = 0.45f; // Animasyon süresi
     public LayerMask enemyLayer;
 
     private float cooldownTimer = 0f;
@@ -16,6 +19,11 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip attackSoundEffect;
 
+    [Header("Camera Shake")]
+    [SerializeField] private Transform cameraRigTransform; // CameraRig objesinin Transform bileþeni
+    [SerializeField] private float shakeDuration = 0.2f;    // Sarsýntý süresi
+    [SerializeField] private float shakeStrength = 0.5f;    // Sarsýntý gücü
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -25,15 +33,15 @@ public class PlayerCombat : MonoBehaviour
     {
         if (GameManager.Instance.IsGameOver) return;
 
-        // Eðer þu an cooldown içindeysek zaman say
+        // Eðer þu an cooldown içindeysek bekle
         if (isAttacking)
         {
             cooldownTimer -= Time.deltaTime;
             if (cooldownTimer <= 0f)
             {
-                isAttacking = false; // tekrar saldýrabilir
+                isAttacking = false;
             }
-            return; // cooldown bitene kadar çýk
+            return;
         }
 
         // Yeni saldýrý baþlatabilir mi?
@@ -55,29 +63,46 @@ public class PlayerCombat : MonoBehaviour
 
             if (nearest != null)
             {
-                animator.SetTrigger("AttackTrigger");
-
-                // Saldýrý sesi çal
-                if (audioSource != null && attackSoundEffect != null)
-                {
-                    audioSource.PlayOneShot(attackSoundEffect);
-                }
-
-                float randAttackDmg = Random.Range(7, 25);
-
-                DamagePopupManager.Instance.ShowPopup(randAttackDmg, nearest.transform.position);
-
-                var dmg = nearest.GetComponent<IDamageable>();
-                if (dmg != null)
-                {
-                    Debug.Log("Enemy Controller Hit!");
-                    dmg.TakeDamage(randAttackDmg);
-                }
-
-                // Cooldown baþlat
-                isAttacking = true;
-                cooldownTimer = attackCooldown;
+                // Saldýrý Coroutine'ini baþlat
+                StartCoroutine(AttackCoroutine(nearest));
             }
+        }
+    }
+
+    private IEnumerator AttackCoroutine(Collider target)
+    {
+        // Cooldown baþlat
+        isAttacking = true;
+        cooldownTimer = attackCooldown;
+
+        // Saldýrý animasyonunu baþlat
+        animator.SetTrigger("AttackTrigger");
+
+        // Animasyon süresi kadar bekle
+        yield return new WaitForSeconds(animationDuration);
+
+        // Saldýrý sesi çal
+        if (audioSource != null && attackSoundEffect != null)
+        {
+            audioSource.PlayOneShot(attackSoundEffect);
+        }
+
+        // Kamera sarsýntý efektini baþlat
+        if (cameraRigTransform != null)
+        {
+            cameraRigTransform.DOShakePosition(shakeDuration, shakeStrength);
+        }
+
+        // Hasar verme ve diðer iþlemleri gerçekleþtir
+        float randAttackDmg = Random.Range(7, 25);
+
+        DamagePopupManager.Instance.ShowPopup(randAttackDmg, target.transform.position);
+
+        var dmg = target.GetComponent<IDamageable>();
+        if (dmg != null)
+        {
+            Debug.Log("Enemy Controller Hit!");
+            dmg.TakeDamage(randAttackDmg);
         }
     }
 

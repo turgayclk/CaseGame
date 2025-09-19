@@ -17,6 +17,7 @@ public class Health : MonoBehaviour, IDamageable
     private float iFrameTimer;
 
     private SpriteRenderer sr;
+    [SerializeField] private SpriteRenderer baseSr;
 
     [SerializeField] private Image damageOverlay;
     [SerializeField] private GameObject bloodDarkEffect;
@@ -140,39 +141,38 @@ public class Health : MonoBehaviour, IDamageable
 
     private System.Collections.IEnumerator Flash()
     {
-        if (sr == null) yield break;
+        if (sr == null || baseSr == null) yield break;
 
         // Eðer player ölü ise direkt orijinal renge dön
         if (!IsAlive)
         {
-            sr.DOKill();        // Tween varsa iptal et
-            sr.color = Color.white; // veya istediðin default renk
+            sr.DOKill();       // Tween varsa iptal et
+            sr.color = Color.white;
+
+            baseSr.DOKill();
+            baseSr.color = Color.white;
             yield break;
         }
 
-        Color original = sr.color;
+        Color originalSR = sr.color;
+        Color originalBaseSR = baseSr.color;
         Color hitColor = Color.red;
-        float duration = 0.8f; // fade süresi
-        float timer = 0f;
+        float duration = 0.8f;
 
-        // Hemen kýrmýzýya geç
+        // Ani kýrmýzýya geç
         sr.color = hitColor;
+        baseSr.color = hitColor;
 
-        while (timer < duration)
-        {
-            // Ölü olup olmadýðýný sürekli kontrol et
-            if (!IsAlive)
-            {
-                sr.color = Color.white;
-                yield break;
-            }
+        // Tween ile smooth kýrmýzýdan beyaza geçiþ
+        sr.DOColor(originalSR, duration).SetEase(Ease.OutQuad);
+        baseSr.DOColor(originalBaseSR, duration).SetEase(Ease.OutQuad);
 
-            timer += Time.deltaTime;
-            sr.color = Color.Lerp(hitColor, original, timer / duration);
-            yield return null;
-        }
+        // Coroutine süresi kadar bekle
+        yield return new WaitForSeconds(duration);
 
-        sr.color = original; // kesin olarak orijinal renk
+        // Kesin olarak orijinal renge dön
+        sr.color = originalSR;
+        baseSr.color = originalBaseSR;
     }
 
     public void Heal(float amount)
