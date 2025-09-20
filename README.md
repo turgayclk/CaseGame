@@ -21,6 +21,18 @@ Ne kadar uzun süre dayanırsa, ustanın mirası ve samurai onuru o kadar büyü
 
 ---
 
+## 🎮 Oyunu Denemek
+
+Oyunu hemen deneyimlemek isteyenler için Unity Play üzerinde prototip sürümü mevcuttur:  
+[Protect Dojo – Unity Play](https://play.unity.com/en/games/e93343b6-f0e8-4867-9a99-13a3e88db1c3/protect-dojo)
+
+> ⚠️ Not:
+> - Bu oyun **tam bir ürün değil**, sadece 2 hafta içerisinde geliştirilen bir prototip.
+> - Hatalar veya eksiklikler olabilir.
+> - Amaç, mekaniklerin test edilebilir ve oynanabilir hâlde sunulmasıdır.
+
+---
+
 ## 📸 Ekran Görüntüleri  
 
 ![](Assets/Screenshots/ss_1.jpg)  
@@ -85,3 +97,4 @@ Ne kadar uzun süre dayanırsa, ustanın mirası ve samurai onuru o kadar büyü
 - **Dil:** C#  
 
 ---
+
