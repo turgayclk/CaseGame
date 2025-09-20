@@ -6542,6 +6542,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 100
   iFrameDuration: 0.5
+  baseSr: {fileID: 36035680}
   damageOverlay: {fileID: 411724616}
   bloodDarkEffect: {fileID: 1465856585}
   playerSource: {fileID: 942206430}
