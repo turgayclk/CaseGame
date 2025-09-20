@@ -23,8 +23,6 @@ Ne kadar uzun süre dayanırsa, ustanın mirası ve samurai onuru o kadar büyü
 
 ## 📸 Ekran Görüntüleri  
 
-> Örnek ekran görüntüleri, playtest sürecinden alınmıştır.  
-
 ![](Assets/Screenshots/ss_1.jpg)  
 ![](Assets/Screenshots/ss_2.jpg)  
 ![](Assets/Screenshots/ss_3.jpg)  
