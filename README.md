@@ -25,11 +25,12 @@ Ne kadar uzun süre dayanırsa, ustanın mirası ve samurai onuru o kadar büyü
 
 > Örnek ekran görüntüleri, playtest sürecinden alınmıştır.  
 
-![Ana Menü](Assets/Screenshots/ss_1.jpg)  
-![Oyun İçi](Assets/Screenshots/ss_2.jpg)  
-![Boss Wave](Assets/Screenshots/ss_3.jpg)  
-![Ayarlar Menüsü](Assets/Screenshots/ss_4.jpg)  
-![Atmosfer](Assets/Screenshots/ss_5.jpg)  
+![](Assets/Screenshots/ss_1.jpg)  
+![](Assets/Screenshots/ss_2.jpg)  
+![](Assets/Screenshots/ss_3.jpg)  
+![](Assets/Screenshots/ss_4.jpg)  
+![](Assets/Screenshots/ss_5.jpg)  
+![](Assets/Screenshots/ss_6.jpg)  
 
 ---
 
@@ -45,7 +46,12 @@ Ne kadar uzun süre dayanırsa, ustanın mirası ve samurai onuru o kadar büyü
   - **Ninja** 🥷: Yavaş hareket eder, **yüksek hasar** verir.  
   - **Canine** 🐺: Çok hızlıdır, **orta hasar** verir.  
   - **Ronin** ⚔️: Normal hızda, **normal hasar** verir.  
-  - **Boss** 👹: Ağır yürür, dojoya **%75 büyük hasar** verir.  
+  - **Boss** 👹: Ağır yürür, dojoya **%75 büyük hasar** verir.
+ 
+ - **Navigasyon Sistemi**
+    - Eğer sahnede düşman varsa ve kamera kadrajında görünmüyorsa,  
+      ekranın üst-ortasında **geliş yönünü gösteren bir gösterge** belirir.  
+    - Oyuncuya düşmanların nereden geleceğini anlaması için yardımcı olur.
 
 - **Oyun Döngüsü**  
   - Düşmanlar oyuncuya değil, **dojoya zarar verir**.  
